@@ -3,10 +3,14 @@ package com.avengers.ironman.utils
 import android.content.Context
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
+import android.content.res.Resources
 import android.os.Build
 import android.os.Environment
 import android.os.StatFs
 import android.text.format.Formatter
+import android.util.DisplayMetrics
+import android.view.WindowManager
+import java.io.File
 
 object DeviceUtils {
 
@@ -95,6 +99,98 @@ object DeviceUtils {
             "-/-"
         }
     }
+
+    /**
+     * 获取手机型号
+     */
+    fun getPhoneModel(): String {
+        return Build.MANUFACTURER + " " + Build.MODEL
+    }
+
+    /**
+     * 获取系统版本
+     */
+    fun getPhoneSysVersion(): String {
+        return Build.VERSION.RELEASE
+    }
+
+    /**
+     * 获取SDK版本
+     */
+    fun getSdkInt(): Int {
+        return Build.VERSION.SDK_INT
+    }
+
+    /**
+     * 分辨率
+     */
+    fun getWidthPixels(context: Context?): Int {
+        val metrics = DisplayMetrics()
+        val windowManager =
+            context?.applicationContext?.getSystemService(Context.WINDOW_SERVICE) as WindowManager?
+        windowManager?.defaultDisplay?.getMetrics(metrics)
+        return windowManager?.let { metrics.widthPixels } ?: 0
+    }
+
+    /**
+     * 分辨率
+     */
+    fun getHeightPixels(context: Context?): Int {
+        return getRealHeightPixels(context) - getStatusBarHeight(context)
+    }
+
+    /**
+     * 分辨率
+     */
+    fun getRealHeightPixels(context: Context?): Int {
+        val windowManager =
+            context?.applicationContext?.getSystemService(Context.WINDOW_SERVICE) as WindowManager?
+        var height = 0
+        val display = windowManager?.defaultDisplay
+        val dm = DisplayMetrics()
+        val c: Class<*>
+        try {
+            c = Class.forName("android.view.Display")
+            val method = c.getMethod("getRealMetrics", DisplayMetrics::class.java)
+            method.invoke(display, dm)
+            height = dm.heightPixels
+        } catch (e: Exception) {
+            e.printStackTrace()
+            LogUtils.info("getRealHeightPixels = " + e.message)
+        }
+        return height
+    }
+
+    /**
+     * 状态栏高度
+     */
+    fun getStatusBarHeight(context: Context?): Int {
+        val resources = context?.applicationContext?.getResources()
+        val resourceId = resources?.getIdentifier("status_bar_height", "dimen", "android")
+        return resourceId?.let { resources?.getDimensionPixelSize(it) } ?: 0
+    }
+
+    /**
+     * 是否Root
+     */
+    fun isDeviceRooted(): Boolean {
+        val su = "su"
+        val locations = arrayOf(
+            "/system/bin/", "/system/xbin/", "/sbin/", "/system/sd/xbin/",
+            "/system/bin/failsafe/", "/data/local/xbin/", "/data/local/bin/", "/data/local/",
+            "/system/sbin/", "/usr/bin/", "/vendor/bin/"
+        )
+        val location = locations.filter { File(it + su).exists() }
+        return location.isNotEmpty()
+    }
+
+    /**
+     *
+     */
+    fun getScreenDensity(): Float {
+        return Resources.getSystem().displayMetrics.density
+    }
+
 }
 
 

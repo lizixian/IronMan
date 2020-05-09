@@ -10,7 +10,10 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        LogUtils.info("getSDCardSpace = " + DeviceUtils.getSDCardSpace(this) + " getRomSpace = " +
-            DeviceUtils.getRomSpace(this))
+        LogUtils.info(
+            "getSDCardSpace = " + DeviceUtils.getSDCardSpace(this) + " getRomSpace = " +
+                    DeviceUtils.getRomSpace(this)
+        )
+        LogUtils.info("是否Root = " + DeviceUtils.isDeviceRooted())
     }
 }
