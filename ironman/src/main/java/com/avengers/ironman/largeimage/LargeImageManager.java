@@ -1,11 +1,25 @@
 package com.avengers.ironman.largeimage;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.text.TextUtils;
+import android.view.View;
 
+import com.avengers.ironman.IronMan;
 import com.avengers.ironman.utils.ConvertUtils;
+import com.avengers.ironman.utils.MD5;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class LargeImageManager {
+
+    public static Map<String, LargeImageInfo> lagerImageCache = new HashMap<>();
+    private View view;
+    private String layoutLevel;
+    private Activity activity;
+
     private LargeImageManager() {
     }
 
@@ -15,6 +29,12 @@ public class LargeImageManager {
 
     private static class SingletonHolder {
         private static final LargeImageManager sInstance = new LargeImageManager();
+    }
+
+    public void saveViewTargetInfo(View view, String layoutLevel, Activity activity) {
+        this.view = view;
+        this.layoutLevel = layoutLevel;
+        this.activity = activity;
     }
 
     public Bitmap transform(String imageUrl, BitmapDrawable bitmapDrawable, String framework, int targetWidth, int targetHeight) {
@@ -35,6 +55,39 @@ public class LargeImageManager {
         if (byteCount <= 0) {
             return;
         }
+        //图片大小
+        double memorySize = ConvertUtils.byte2MemorySize(byteCount, ConvertUtils.MB);
+        double fileSizeThreshold = IronMan.getInstance().getLargeImageFileSizeThreshold();
+        double memorySizeThreshold = IronMan.getInstance().getLargeImageMemorySizeThreshold();
+
+        LargeImageInfo largeImageInfo;
+        if (lagerImageCache.containsKey(imageUrl)) {
+            largeImageInfo = lagerImageCache.get(imageUrl);
+            if (largeImageInfo != null && (memorySize > memorySizeThreshold || largeImageInfo.getFileSize() > fileSizeThreshold)) {
+                createLargeImageInfo(imageUrl, width, height, framework, memorySize, largeImageInfo);
+                lagerImageCache.put(imageUrl, largeImageInfo);
+            } else {
+                lagerImageCache.remove(imageUrl);
+            }
+        } else {
+            if (memorySize > memorySizeThreshold) {
+                largeImageInfo = new LargeImageInfo();
+                createLargeImageInfo(imageUrl, width, height, framework, memorySize, largeImageInfo);
+                lagerImageCache.put(imageUrl, largeImageInfo);
+            }
+        }
+    }
+
+    private void createLargeImageInfo(String imageUrl, int width, int height, String framework, double memorySize, LargeImageInfo largeImageInfo) {
+        largeImageInfo.setId(MD5.hexdigest(imageUrl));
+        largeImageInfo.setFramework(framework);
+        largeImageInfo.setUrl(imageUrl);
+        largeImageInfo.setMemorySize(memorySize);
+        largeImageInfo.setWidth(width);
+        largeImageInfo.setHeight(height);
+        largeImageInfo.setLayoutId(view != null ? view.getId() : -1);
+        largeImageInfo.setLayoutLevel(!TextUtils.isEmpty(layoutLevel) ? layoutLevel : "can not get layoutLevel");
+        largeImageInfo.setActivity(activity != null ? activity.getClass().getSimpleName() : "can not get activity name");
     }
 
 

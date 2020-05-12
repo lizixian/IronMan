@@ -25,6 +25,25 @@ import android.content.Context;
 public class IronMan {
 
     private static Context context;
+    /**
+     * 文件大小阈值 kb为单位
+     */
+    private double largeImageFileSizeThreshold = 500.0;
+    /**
+     * 内存大小阈值 kb为单位
+     */
+    private double largeImageMemorySizeThreshold = 800.0;
+
+    private IronMan() {
+    }
+
+    public static IronMan getInstance() {
+        return SingletonHolder.sInstance;
+    }
+
+    private static class SingletonHolder {
+        private static final IronMan sInstance = new IronMan();
+    }
 
     public static void init(Application application) {
         context = application;
@@ -32,5 +51,13 @@ public class IronMan {
 
     public static Context getContext() {
         return context;
+    }
+
+    public double getLargeImageFileSizeThreshold() {
+        return largeImageFileSizeThreshold;
+    }
+
+    public double getLargeImageMemorySizeThreshold() {
+        return largeImageMemorySizeThreshold;
     }
 }

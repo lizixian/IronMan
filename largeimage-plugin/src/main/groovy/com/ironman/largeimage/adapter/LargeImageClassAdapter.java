@@ -30,8 +30,13 @@ public class LargeImageClassAdapter extends ClassVisitor {
             return mv;
         }
         //拦截 glide 的 SingleRequest 类的构造方法
-        if (className.equals("com/bumptech/glide/request/SingleRequest") && (methodName.equals("init") || methodName.equals("<init>") && descriptor != null)) {
-            return mv == null ? null : new GlideMethodAdapter(mv, access, methodName, descriptor);
+        boolean interceptSingleRequest = className.equals("com/bumptech/glide/request/SingleRequest") &&
+                (methodName.equals("init") || methodName.equals("<init>"));
+        //拦截 glide 的 ViewTarget 类的构造方法
+        boolean interceptViewTarget = className.equals("com/bumptech/glide/request/target/ViewTarget") &&
+                (methodName.equals("init") || methodName.equals("<init>"));
+        if ((interceptSingleRequest || interceptViewTarget) && descriptor != null) {
+            return mv == null ? null : new GlideMethodAdapter(mv, access, className, methodName, descriptor);
         }
         return mv;
     }

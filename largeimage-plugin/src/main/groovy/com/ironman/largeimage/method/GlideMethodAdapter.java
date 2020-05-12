@@ -6,8 +6,11 @@ import org.objectweb.asm.commons.AdviceAdapter;
 
 public class GlideMethodAdapter extends AdviceAdapter {
 
-    public GlideMethodAdapter(MethodVisitor methodVisitor, int access, String name, String descriptor) {
-        super(Opcodes.ASM5, methodVisitor, access, name, descriptor);
+    private String className;
+
+    public GlideMethodAdapter(MethodVisitor methodVisitor, int access, String className, String methodName, String descriptor) {
+        super(Opcodes.ASM5, methodVisitor, access, methodName, descriptor);
+        this.className = className;
     }
 
     /**
@@ -16,8 +19,14 @@ public class GlideMethodAdapter extends AdviceAdapter {
     @Override
     protected void onMethodExit(int opcode) {
         super.onMethodExit(opcode);
-        mv.visitVarInsn(ALOAD, 0);  //访问局部变量指令，var 是行数
-        mv.visitFieldInsn(GETFIELD, "com/bumptech/glide/request/SingleRequest", "requestListeners", "Ljava/util/List;");
-        mv.visitMethodInsn(INVOKESTATIC, "com/avengers/ironman/largeimage/aop/GlideHook", "process", "(Ljava/util/List;)Ljava/util/List;", false);
+        if (className.equals("com/bumptech/glide/request/SingleRequest")) {
+            mv.visitVarInsn(ALOAD, 0);  //访问局部变量指令，var 是行数
+            mv.visitFieldInsn(GETFIELD, "com/bumptech/glide/request/SingleRequest", "requestListeners", "Ljava/util/List;");
+            mv.visitMethodInsn(INVOKESTATIC, "com/avengers/ironman/largeimage/aop/GlideHook", "hookSingleRequest", "(Ljava/util/List;)Ljava/util/List;", false);
+        } else if (className.equals("com/bumptech/glide/request/target/ViewTarget")) {
+            mv.visitVarInsn(ALOAD, 0);
+            mv.visitFieldInsn(GETFIELD, "com/bumptech/glide/request/target/ViewTarget", "view", "Landroid/view/View;");
+            mv.visitMethodInsn(INVOKESTATIC, "com/avengers/ironman/largeimage/aop/GlideHook", "hookViewTarget", "(Landroid/view/View;)V", false);
+        }
     }
 }

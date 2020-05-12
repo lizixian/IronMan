@@ -1,5 +1,7 @@
 package com.avengers.ironman.largeimage.aop;
 
+import android.view.View;
+
 import com.bumptech.glide.request.RequestListener;
 
 import java.util.List;
@@ -9,8 +11,10 @@ import java.util.List;
  */
 public class TestAop {
     List<RequestListener> requestListeners;
+    View view;
 
     public void test() {
-        GlideHook.process(requestListeners);
+//        GlideHook.hookSingleRequest(requestListeners);
+        GlideHook.hookViewTarget(view);
     }
 }
