@@ -32,6 +32,6 @@ public class LargeImageClassAdapter extends ClassVisitor {
         if (className.equals("com/bumptech/glide/request/SingleRequest") && name.equals("<init>") && descriptor != null) {
             return mv == null ? null : new GlideMethodAdapter(mv, access, name, descriptor);
         }
-        return super.visitMethod(access, name, descriptor, signature, exceptions);
+        return mv;
     }
 }

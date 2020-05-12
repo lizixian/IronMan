@@ -21,10 +21,8 @@ public class GlideMethodAdapter extends AdviceAdapter {
     @Override
     protected void onMethodExit(int opcode) {
         super.onMethodExit(opcode);
-        //访问局部变量指令
-        mv.visitVarInsn(ALOAD, 0);
+        mv.visitVarInsn(ALOAD, 0);  //访问局部变量指令
         mv.visitFieldInsn(GETFIELD, "com/bumptech/glide/request/SingleRequest", "requestListeners", "Ljava/util/List;");
-        //访问方法指令
         mv.visitMethodInsn(INVOKESTATIC, "com/avengers/ironman/largeimage/aop/GlideHook", "process", "(Ljava/util/List;)Ljava/util/List;", false);
     }
 }

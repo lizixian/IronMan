@@ -2,18 +2,21 @@ apply plugin: 'groovy'
 apply plugin: 'maven'
 
 repositories {
+    google()
+    jcenter()
     mavenCentral()
 }
+
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation gradleApi() // gradler sdk
     implementation localGroovy() // groovy sdk
-    implementation('com.quinn.hunter:hunter-transform:0.9.3') { //使用hunter框架
-        exclude group: 'com.android.tools.build'  //排除hunter带来的gradle，使用自定义gradle版本
+    implementation 'com.android.tools.build:gradle:3.1.4'
+    implementation 'com.android.tools.build:gradle-api:3.1.4'
+    implementation('com.quinn.hunter:hunter-transform:0.9.3'){
+        exclude group: 'com.android.tools.build'
     }
-    implementation 'com.android.tools.build:gradle:3.6.3' //版本不能太高，防止跟项目的起冲突
-    implementation 'com.android.tools.build:gradle-api:3.6.3'
 }
 
 uploadArchives {
@@ -22,9 +25,10 @@ uploadArchives {
             //设置插件的GAV参数
             pom.groupId = 'com.avengers.ironman.plugin'
             pom.artifactId = 'largeimage'
-            pom.version = '1.0.1'
+            pom.version = '1.0.5'
             //文件发布到下面目录
             repository(url: uri('../repo'))
         }
     }
 }
+
