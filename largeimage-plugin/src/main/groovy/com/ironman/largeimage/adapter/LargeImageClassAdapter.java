@@ -24,13 +24,14 @@ public class LargeImageClassAdapter extends ClassVisitor {
     }
 
     @Override
-    public MethodVisitor visitMethod(int access, String name, String descriptor, String signature, String[] exceptions) {
-        MethodVisitor mv = cv.visitMethod(access, name, descriptor, signature, exceptions);
+    public MethodVisitor visitMethod(int access, String methodName, String descriptor, String signature, String[] exceptions) {
+        MethodVisitor mv = cv.visitMethod(access, methodName, descriptor, signature, exceptions);
         if (!LargeImageConfig.getInstance().isLargeImagePluginSwitch()) {
             return mv;
         }
-        if (className.equals("com/bumptech/glide/request/SingleRequest") && name.equals("<init>") && descriptor != null) {
-            return mv == null ? null : new GlideMethodAdapter(mv, access, name, descriptor);
+        //拦截 glide 的 SingleRequest 类的构造方法
+        if (className.equals("com/bumptech/glide/request/SingleRequest") && (methodName.equals("init") || methodName.equals("<init>") && descriptor != null)) {
+            return mv == null ? null : new GlideMethodAdapter(mv, access, methodName, descriptor);
         }
         return mv;
     }

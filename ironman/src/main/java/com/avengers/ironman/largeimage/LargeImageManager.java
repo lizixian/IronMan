@@ -2,11 +2,7 @@ package com.avengers.ironman.largeimage;
 
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.os.Handler;
-import android.os.Looper;
-import android.widget.Toast;
 
-import com.avengers.ironman.IronMan;
 import com.avengers.ironman.utils.ConvertUtils;
 
 public class LargeImageManager {
@@ -39,14 +35,7 @@ public class LargeImageManager {
         if (byteCount <= 0) {
             return;
         }
-        mMainHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(IronMan.getContext(), "imageUrl = ", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
-    Handler mMainHandler = new Handler(Looper.getMainLooper());
 
 }
