@@ -7,6 +7,8 @@ public class LargeImageInfo {
     private double memorySize;
     private int width;
     private int height;
+    private int viewWidth;
+    private int viewHeight;
     private String activity;
     private String layoutLevel;
     private int layoutId;
@@ -92,6 +94,22 @@ public class LargeImageInfo {
         this.layoutId = layoutId;
     }
 
+    public int getViewWidth() {
+        return viewWidth;
+    }
+
+    public void setViewWidth(int viewWidth) {
+        this.viewWidth = viewWidth;
+    }
+
+    public int getViewHeight() {
+        return viewHeight;
+    }
+
+    public void setViewHeight(int viewHeight) {
+        this.viewHeight = viewHeight;
+    }
+
     @Override
     public String toString() {
         return "LargeImageInfo{" +
@@ -101,9 +119,11 @@ public class LargeImageInfo {
                 ", memorySize=" + memorySize +
                 ", width=" + width +
                 ", height=" + height +
+                ", viewWidth=" + viewWidth +
+                ", viewHeight=" + viewHeight +
                 ", activity='" + activity + '\'' +
                 ", layoutLevel='" + layoutLevel + '\'' +
-                ", layoutId='" + layoutId + '\'' +
+                ", layoutId=" + layoutId +
                 '}';
     }
 }

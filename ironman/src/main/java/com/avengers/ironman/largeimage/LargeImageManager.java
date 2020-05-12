@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.view.View;
 
 import com.avengers.ironman.IronMan;
+import com.avengers.ironman.MainLooper;
 import com.avengers.ironman.utils.ConvertUtils;
 import com.avengers.ironman.utils.MD5;
 
@@ -59,7 +60,6 @@ public class LargeImageManager {
         double memorySize = ConvertUtils.byte2MemorySize(byteCount, ConvertUtils.MB);
         double fileSizeThreshold = IronMan.getInstance().getLargeImageFileSizeThreshold();
         double memorySizeThreshold = IronMan.getInstance().getLargeImageMemorySizeThreshold();
-
         LargeImageInfo largeImageInfo;
         if (lagerImageCache.containsKey(imageUrl)) {
             largeImageInfo = lagerImageCache.get(imageUrl);
@@ -78,16 +78,23 @@ public class LargeImageManager {
         }
     }
 
-    private void createLargeImageInfo(String imageUrl, int width, int height, String framework, double memorySize, LargeImageInfo largeImageInfo) {
-        largeImageInfo.setId(MD5.hexdigest(imageUrl));
-        largeImageInfo.setFramework(framework);
-        largeImageInfo.setUrl(imageUrl);
-        largeImageInfo.setMemorySize(memorySize);
-        largeImageInfo.setWidth(width);
-        largeImageInfo.setHeight(height);
-        largeImageInfo.setLayoutId(view != null ? view.getId() : -1);
-        largeImageInfo.setLayoutLevel(!TextUtils.isEmpty(layoutLevel) ? layoutLevel : "can not get layoutLevel");
-        largeImageInfo.setActivity(activity != null ? activity.getClass().getSimpleName() : "can not get activity name");
+    private void createLargeImageInfo(final String imageUrl, final int width, final int height, final String framework, final double memorySize, final LargeImageInfo largeImageInfo) {
+        MainLooper.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                largeImageInfo.setId(MD5.hexdigest(imageUrl));
+                largeImageInfo.setFramework(framework);
+                largeImageInfo.setUrl(imageUrl);
+                largeImageInfo.setMemorySize(memorySize);
+                largeImageInfo.setWidth(width);
+                largeImageInfo.setHeight(height);
+                largeImageInfo.setViewWidth(view != null ? view.getMeasuredWidth() : -1);
+                largeImageInfo.setViewHeight(view != null ? view.getMeasuredHeight() : -1);
+                largeImageInfo.setLayoutId(view != null ? view.getId() : -1);
+                largeImageInfo.setLayoutLevel(!TextUtils.isEmpty(layoutLevel) ? layoutLevel : "can not get layoutLevel");
+                largeImageInfo.setActivity(activity != null ? activity.getClass().getSimpleName() : "can not get activity name");
+            }
+        });
     }
 
 
