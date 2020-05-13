@@ -1,5 +1,6 @@
 package com.avengers.ironman.utils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -18,14 +19,15 @@ import java.io.File;
 import java.lang.reflect.Method;
 
 public class DeviceUtils {
-    private boolean isHigherJellyBeanMr2() {
+    @SuppressLint("ObsoleteSdkInt")
+    public static boolean isHigherJellyBeanMr2() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2;
     }
 
     /**
      * 获取 PackageInfo
      */
-    PackageInfo getPackageInfo(Context context) {
+    public static PackageInfo getPackageInfo(Context context) {
         PackageInfo info = null;
         try {
             PackageManager pm = context.getPackageManager();
@@ -39,7 +41,7 @@ public class DeviceUtils {
     /**
      * 获得SD卡总大小
      */
-    String getSdcardTotalSize(Context context) {
+    public static String getSdcardTotalSize(Context context) {
         StatFs statFs = new StatFs(Environment.getExternalStorageDirectory().getPath());
         long blockSize = isHigherJellyBeanMr2() ? statFs.getBlockSizeLong() : statFs.getBlockSize();
         long totalBlocks = isHigherJellyBeanMr2() ? statFs.getBlockCountLong() : statFs.getBlockCount();
@@ -49,7 +51,7 @@ public class DeviceUtils {
     /**
      * 获得sd卡剩余容量，即可用大小
      */
-    String getSdcardAvailableSize(Context context) {
+    public static String getSdcardAvailableSize(Context context) {
         StatFs statFs = new StatFs(Environment.getExternalStorageDirectory().getPath());
         long blockSize = isHigherJellyBeanMr2() ? statFs.getBlockSizeLong() : statFs.getBlockSize();
         long availableBlocks = isHigherJellyBeanMr2() ? statFs.getAvailableBlocksLong() : statFs.getAvailableBlocks();
@@ -59,7 +61,7 @@ public class DeviceUtils {
     /**
      * 获得机身内存总大小
      */
-    private String getRomTotalSize(Context context) {
+    public static String getRomTotalSize(Context context) {
         StatFs statFs = new StatFs(Environment.getDataDirectory().getPath());
         long blockSize = isHigherJellyBeanMr2() ? statFs.getBlockSizeLong() : statFs.getBlockSize();
         long totalBlocks = isHigherJellyBeanMr2() ? statFs.getBlockCountLong() : statFs.getBlockCount();
@@ -69,14 +71,14 @@ public class DeviceUtils {
     /**
      * 获得机身可用内存
      */
-    private String getRomAvailableSize(Context context) {
+    public static String getRomAvailableSize(Context context) {
         StatFs statFs = new StatFs(Environment.getDataDirectory().getPath());
         long blockSize = isHigherJellyBeanMr2() ? statFs.getBlockSizeLong() : statFs.getBlockSize();
         long availableBlocks = isHigherJellyBeanMr2() ? statFs.getAvailableBlocksLong() : statFs.getAvailableBlocks();
         return Formatter.formatFileSize(context, blockSize * availableBlocks);
     }
 
-    String getSDCardSpace(Context context) {
+    public static String getSDCardSpace(Context context) {
         try {
             String free = getSdcardAvailableSize(context);
             String total = getSdcardTotalSize(context);
@@ -86,7 +88,7 @@ public class DeviceUtils {
         }
     }
 
-    String getRomSpace(Context context) {
+    public static String getRomSpace(Context context) {
         try {
             String free = getRomAvailableSize(context);
             String total = getRomTotalSize(context);
@@ -97,30 +99,57 @@ public class DeviceUtils {
     }
 
     /**
+     * 内存占用
+     *
+     * @return
+     */
+    public static String memoryUsage(Context context) {
+        Runtime runtime = Runtime.getRuntime();
+        long memoryUsage = (runtime.totalMemory() - runtime.freeMemory()) >> 10;
+        return Formatter.formatFileSize(context, memoryUsage);
+    }
+
+    public static String memoryUsageRate(Context context) {
+        Runtime runtime = Runtime.getRuntime();
+        long totalSize = runtime.maxMemory() >> 10;
+        long memoryUsage = (runtime.totalMemory() - runtime.freeMemory()) >> 10;
+        long memoryUsageRate = memoryUsage * 100 / totalSize;
+        return Formatter.formatFileSize(context, memoryUsageRate);
+    }
+
+    public static String getMemorySpace(Context context) {
+        try {
+            return memoryUsage(context) + "/" + memoryUsageRate(context);
+        } catch (Exception ex) {
+            return "-/-";
+        }
+    }
+
+    /**
      * 获取手机型号
      */
-    String getPhoneModel() {
+    public static String getPhoneModel() {
         return Build.MANUFACTURER + " " + Build.MODEL;
     }
 
     /**
      * 获取系统版本
      */
-    String getPhoneSysVersion() {
+    public static String getPhoneSysVersion() {
         return Build.VERSION.RELEASE;
     }
 
     /**
      * 获取SDK版本
      */
-    int getSdkInt() {
+    public static int getSdkInt() {
         return Build.VERSION.SDK_INT;
     }
 
     /**
      * 分辨率
      */
-    int getWidthPixels(Context context) {
+    public static int getWidthPixels(Context context) {
         DisplayMetrics metrics = new DisplayMetrics();
         WindowManager windowManager =
                 (WindowManager) context.getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
@@ -135,14 +164,14 @@ public class DeviceUtils {
     /**
      * 分辨率
      */
-    int getHeightPixels(Context context) {
+    public static int getHeightPixels(Context context) {
         return getRealHeightPixels(context) - getStatusBarHeight(context);
     }
 
     /**
      * 分辨率
      */
-    int getRealHeightPixels(Context context) {
+    public static int getRealHeightPixels(Context context) {
         WindowManager windowManager =
                 (WindowManager) context.getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
         int height = 0;
@@ -164,7 +193,7 @@ public class DeviceUtils {
     /**
      * 状态栏高度
      */
-    int getStatusBarHeight(Context context) {
+    public static int getStatusBarHeight(Context context) {
         Resources resources = context.getApplicationContext().getResources();
         int resourceId = resources.getIdentifier("status_bar_height", "dimen", "android");
         return resources.getDimensionPixelSize(resourceId);
@@ -173,7 +202,7 @@ public class DeviceUtils {
     /**
      * 是否Root
      */
-    boolean isDeviceRooted() {
+    public static boolean isDeviceRooted() {
         String su = "su";
         String[] locations = new String[]{
                 "/system/bin/", "/system/xbin/", "/sbin/", "/system/sd/xbin/",
@@ -191,7 +220,7 @@ public class DeviceUtils {
     /**
      *
      */
-    float getScreenDensity() {
+    public static float getScreenDensity() {
         return Resources.getSystem().getDisplayMetrics().density;
     }
 }

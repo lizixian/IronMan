@@ -37,7 +37,7 @@ public class IronManImageLoadingListener implements ImageLoadingListener {
     public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
         try {
             if (IronMan.get().largeImageConfig().isLargeImgOpen()) {
-                LargeImageManager.getInstance().transform(imageUri, loadedImage, "ImageLoader", loadedImage.getWidth(), loadedImage.getHeight());
+                LargeImageManager.getInstance().transform(imageUri, loadedImage, "ImageLoader");
             }
         } catch (Exception e) {
             e.printStackTrace();

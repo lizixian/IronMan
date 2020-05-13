@@ -31,7 +31,7 @@ public class FrescoPostprocessor implements Postprocessor {
     public CloseableReference<Bitmap> process(Bitmap sourceBitmap, PlatformBitmapFactory bitmapFactory) {
         try {
             if (IronMan.get().largeImageConfig().isLargeImgOpen()) {
-                LargeImageManager.getInstance().transform(mUri.toString(), sourceBitmap, "Fresco", sourceBitmap.getWidth(), sourceBitmap.getHeight());
+                LargeImageManager.getInstance().transform(mUri.toString(), sourceBitmap, "Fresco");
             }
         } catch (Exception e) {
             e.printStackTrace();

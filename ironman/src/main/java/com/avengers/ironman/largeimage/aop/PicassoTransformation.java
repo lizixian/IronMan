@@ -22,9 +22,9 @@ public class PicassoTransformation implements Transformation {
         try {
             if (IronMan.get().largeImageConfig().isLargeImgOpen()) {
                 if (mUri != null) {
-                    LargeImageManager.getInstance().transform(mUri.toString(), source, "Picasso", source.getWidth(), source.getHeight());
+                    LargeImageManager.getInstance().transform(mUri.toString(), source, "Picasso");
                 } else {
-                    LargeImageManager.getInstance().transform("" + mResourceId, source, "Picasso", source.getWidth(), source.getHeight());
+                    LargeImageManager.getInstance().transform("" + mResourceId, source, "Picasso");
                 }
             }
         } catch (Exception e) {
