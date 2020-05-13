@@ -32,33 +32,22 @@ public class LargeImageClassVisitor extends ClassVisitor {
         if (!LargeImageConfig.getInstance().isLargeImagePluginSwitch()) {
             return mv;
         }
-        //拦截 glide 的 SingleRequest 类的构造方法
-        boolean interceptSingleRequest = className.equals("com/bumptech/glide/request/SingleRequest") &&
-                (methodName.equals("init") || methodName.equals("<init>"));
-        //拦截 glide 的 ViewTarget 类的构造方法
-        boolean interceptViewTarget = className.equals("com/bumptech/glide/request/target/ViewTarget") &&
-                (methodName.equals("init") || methodName.equals("<init>"));
-        if ((interceptSingleRequest || interceptViewTarget) && descriptor != null) {
-            return mv == null ? null : new GlideMethodAdapter(mv, access, className, methodName, descriptor);
+        boolean isConstructor = methodName.equals("init") || methodName.equals("<init>");
+        if (isConstructor && descriptor != null) {
+            switch (className) {
+                case "com/bumptech/glide/request/SingleRequest":
+                case "com/bumptech/glide/request/target/ViewTarget":
+                    return mv == null ? null : new GlideMethodAdapter(mv, access, className, methodName, descriptor);
+                case "com/squareup/picasso/Request":
+                    return mv == null ? null : new PicassoMethodAdapter(mv, access, methodName, descriptor);
+                case "com/facebook/imagepipeline/request/ImageRequest":
+                    return mv == null ? null : new FrescoMethodAdapter(mv, access, methodName, descriptor);
+                case "com/nostra13/universalimageloader/core/ImageLoadingInf":
+                    return mv == null ? null : new ImageLoaderMethodAdapter(mv, access, methodName, descriptor);
+                default:
+                    return mv;
+            }
         }
-
-        //对picasso的Request类的构造方法进行字节码修改
-        if (className.equals("com/squareup/picasso/Request") && methodName.equals("<init>") && descriptor != null) {
-            return mv == null ? null : new PicassoMethodAdapter(mv, access, methodName, descriptor);
-        }
-
-        //Fresco字节码替换
-        if (className.equals("com/facebook/imagepipeline/request/ImageRequest") && methodName.equals("<init>") && descriptor != null) {
-            //创建MethodVisitor代理
-            return mv == null ? null : new FrescoMethodAdapter(mv, access, methodName, descriptor);
-        }
-
-        //imageLoader字节码替换
-        if (className.equals("com/nostra13/universalimageloader/core/ImageLoadingInfo") && methodName.equals("<init>") && descriptor != null) {
-            //创建MethodVisitor代理
-            return mv == null ? null : new ImageLoaderMethodAdapter(mv, access, methodName, descriptor);
-        }
-
         return mv;
     }
 }

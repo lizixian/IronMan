@@ -1,8 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.avengers.ironman">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <application android:networkSecurityConfig="@xml/ironman_network_config">
+    <application
+        android:networkSecurityConfig="@xml/ironman_network_config"
+        tools:targetApi="n">
 
     </application>
 </manifest>

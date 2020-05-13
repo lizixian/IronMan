@@ -2,19 +2,16 @@ package com.avengers.ironman.largeimage.aop;
 
 import android.view.View;
 
-import com.bumptech.glide.request.RequestListener;
-
-import java.util.List;
+import com.bumptech.glide.request.SingleRequest;
 
 /**
  * 查看ASM代码用
  */
 public class TestAop {
-    List<RequestListener> requestListeners;
+    SingleRequest singleRequest;
     View view;
 
     public void test() {
-//        GlideHook.hookSingleRequest(requestListeners);
-        GlideHook.hookViewTarget(view);
+        GlideHook.hookSingleRequest(singleRequest);
     }
 }

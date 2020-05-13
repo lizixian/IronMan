@@ -10,13 +10,14 @@ import com.avengers.ironman.IronMan;
 import com.avengers.ironman.MainLooper;
 import com.avengers.ironman.utils.ConvertUtils;
 import com.avengers.ironman.utils.MD5;
+import com.blankj.utilcode.util.LogUtils;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class LargeImageManager {
 
-    public Map<String, LargeImageInfo> lagerImageCache = new HashMap<>();
+    public static Map<String, LargeImageInfo> lagerImageCache = new HashMap<>();
     private View view;
     private String layoutLevel;
     private Activity activity;

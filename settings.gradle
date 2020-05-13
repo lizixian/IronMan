@@ -1,3 +1,4 @@
 rootProject.name='IronManPro'
 include ':app', ':ironman'
 include ':largeimage-plugin'
+include ':ironman-analysis'

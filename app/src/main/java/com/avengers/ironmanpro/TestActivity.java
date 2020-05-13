@@ -17,4 +17,5 @@ public class TestActivity extends AppCompatActivity {
                 .load("https://n.sinaimg.cn/sinacn10112/566/w1018h1148/20191111/fd6e-iieqapt6530904.jpg")
                 .into((ImageView) findViewById(R.id.image));
     }
+
 }

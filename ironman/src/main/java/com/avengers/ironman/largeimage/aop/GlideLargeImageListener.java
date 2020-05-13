@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 
 import com.avengers.ironman.IronMan;
 import com.avengers.ironman.largeimage.LargeImageManager;
+import com.blankj.utilcode.util.LogUtils;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
@@ -30,6 +31,7 @@ public class GlideLargeImageListener<R> implements RequestListener<R> {
             width = view.getWidth();
             height = view.getHeight();
         }
+        LogUtils.i("拦截到的url = " + model.toString());
         try {
             if (IronMan.get().largeImageConfig().isLargeImgOpen()) {
                 if (resource instanceof Bitmap) {

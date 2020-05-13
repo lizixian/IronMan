@@ -19,14 +19,18 @@ public class GlideMethodAdapter extends AdviceAdapter {
     @Override
     protected void onMethodExit(int opcode) {
         super.onMethodExit(opcode);
-        if (className.equals("com/bumptech/glide/request/SingleRequest")) {
-            mv.visitVarInsn(ALOAD, 0);  //访问局部变量指令，var 是行数
-            mv.visitFieldInsn(GETFIELD, "com/bumptech/glide/request/SingleRequest", "requestListeners", "Ljava/util/List;");
-            mv.visitMethodInsn(INVOKESTATIC, "com/avengers/ironman/largeimage/aop/GlideHook", "hookSingleRequest", "(Ljava/util/List;)Ljava/util/List;", false);
-        } else if (className.equals("com/bumptech/glide/request/target/ViewTarget")) {
-            mv.visitVarInsn(ALOAD, 0);
-            mv.visitFieldInsn(GETFIELD, "com/bumptech/glide/request/target/ViewTarget", "view", "Landroid/view/View;");
-            mv.visitMethodInsn(INVOKESTATIC, "com/avengers/ironman/largeimage/aop/GlideHook", "hookViewTarget", "(Landroid/view/View;)V", false);
+        switch (className) {
+            case "com/bumptech/glide/request/SingleRequest":
+                mv.visitVarInsn(ALOAD, 0);  //访问局部变量指令，var 是行数
+                mv.visitMethodInsn(INVOKESTATIC, "com/avengers/ironman/largeimage/aop/GlideHook", "hookSingleRequest", "(Ljava/lang/Object;)V", false);
+                break;
+            case "com/bumptech/glide/request/target/ViewTarget":
+                mv.visitVarInsn(ALOAD, 0);
+                mv.visitFieldInsn(GETFIELD, "com/bumptech/glide/request/target/ViewTarget", "view", "Landroid/view/View;");
+                mv.visitMethodInsn(INVOKESTATIC, "com/avengers/ironman/largeimage/aop/GlideHook", "hookViewTarget", "(Landroid/view/View;)V", false);
+                break;
+            default:
+                break;
         }
     }
 }

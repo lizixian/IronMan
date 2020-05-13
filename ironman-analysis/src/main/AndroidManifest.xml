@@ -1,0 +1,17 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.avengers.ironman_analysis">
+
+    <application>
+        <activity android:name="com.avengers.ironman_analysis.ResultActivity" />
+        <activity-alias
+            android:name="com.avengers.ironman.ShortcutLauncherActivity"
+            android:icon="@drawable/ic_launcher"
+            android:label="IronMan"
+            android:targetActivity="com.avengers.ironman_analysis.ResultActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+    </application>
+</manifest>
