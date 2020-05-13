@@ -6,6 +6,7 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 
+import com.avengers.ironman.IronMan;
 import com.avengers.ironman.largeimage.LargeImageManager;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
@@ -29,10 +30,16 @@ public class GlideLargeImageListener<R> implements RequestListener<R> {
             width = view.getWidth();
             height = view.getHeight();
         }
-        if (resource instanceof Bitmap) {
-            LargeImageManager.getInstance().transform(model.toString(), (Bitmap) resource, "Glide", width, height);
-        } else if (resource instanceof BitmapDrawable) {
-            LargeImageManager.getInstance().transform(model.toString(), (BitmapDrawable) resource, "Glide", width, height);
+        try {
+            if (IronMan.get().largeImageConfig().isLargeImgOpen()) {
+                if (resource instanceof Bitmap) {
+                    LargeImageManager.getInstance().transform(model.toString(), (Bitmap) resource, "Glide", width, height);
+                } else if (resource instanceof BitmapDrawable) {
+                    LargeImageManager.getInstance().transform(model.toString(), (BitmapDrawable) resource, "Glide", width, height);
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
         return false;
     }

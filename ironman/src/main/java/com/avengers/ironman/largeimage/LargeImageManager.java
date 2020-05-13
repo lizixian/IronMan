@@ -16,7 +16,7 @@ import java.util.Map;
 
 public class LargeImageManager {
 
-    public static Map<String, LargeImageInfo> lagerImageCache = new HashMap<>();
+    public Map<String, LargeImageInfo> lagerImageCache = new HashMap<>();
     private View view;
     private String layoutLevel;
     private Activity activity;
@@ -58,8 +58,8 @@ public class LargeImageManager {
         }
         //图片大小
         double memorySize = ConvertUtils.byte2MemorySize(byteCount, ConvertUtils.MB);
-        double fileSizeThreshold = IronMan.getInstance().getLargeImageFileSizeThreshold();
-        double memorySizeThreshold = IronMan.getInstance().getLargeImageMemorySizeThreshold();
+        double fileSizeThreshold = IronMan.get().largeImageConfig().getFileSizeThreshold();
+        double memorySizeThreshold = IronMan.get().largeImageConfig().getMemorySizeThreshold();
         LargeImageInfo largeImageInfo;
         if (lagerImageCache.containsKey(imageUrl)) {
             largeImageInfo = lagerImageCache.get(imageUrl);
@@ -79,6 +79,7 @@ public class LargeImageManager {
     }
 
     private void createLargeImageInfo(final String imageUrl, final int width, final int height, final String framework, final double memorySize, final LargeImageInfo largeImageInfo) {
+        //post一下主要是想获取宽高
         MainLooper.runOnUiThread(new Runnable() {
             @Override
             public void run() {

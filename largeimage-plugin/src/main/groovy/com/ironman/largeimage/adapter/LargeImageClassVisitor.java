@@ -1,19 +1,22 @@
 package com.ironman.largeimage.adapter;
 
 import com.ironman.largeimage.LargeImageConfig;
+import com.ironman.largeimage.method.FrescoMethodAdapter;
 import com.ironman.largeimage.method.GlideMethodAdapter;
+import com.ironman.largeimage.method.ImageLoaderMethodAdapter;
+import com.ironman.largeimage.method.PicassoMethodAdapter;
 
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
-public class LargeImageClassAdapter extends ClassVisitor {
+public class LargeImageClassVisitor extends ClassVisitor {
     /**
      * 当前类名
      */
     private String className;
 
-    public LargeImageClassAdapter(ClassVisitor classVisitor) {
+    public LargeImageClassVisitor(ClassVisitor classVisitor) {
         super(Opcodes.ASM5, classVisitor);
     }
 
@@ -38,6 +41,24 @@ public class LargeImageClassAdapter extends ClassVisitor {
         if ((interceptSingleRequest || interceptViewTarget) && descriptor != null) {
             return mv == null ? null : new GlideMethodAdapter(mv, access, className, methodName, descriptor);
         }
+
+        //对picasso的Request类的构造方法进行字节码修改
+        if (className.equals("com/squareup/picasso/Request") && methodName.equals("<init>") && descriptor != null) {
+            return mv == null ? null : new PicassoMethodAdapter(mv, access, methodName, descriptor);
+        }
+
+        //Fresco字节码替换
+        if (className.equals("com/facebook/imagepipeline/request/ImageRequest") && methodName.equals("<init>") && descriptor != null) {
+            //创建MethodVisitor代理
+            return mv == null ? null : new FrescoMethodAdapter(mv, access, methodName, descriptor);
+        }
+
+        //imageLoader字节码替换
+        if (className.equals("com/nostra13/universalimageloader/core/ImageLoadingInfo") && methodName.equals("<init>") && descriptor != null) {
+            //创建MethodVisitor代理
+            return mv == null ? null : new ImageLoaderMethodAdapter(mv, access, methodName, descriptor);
+        }
+
         return mv;
     }
 }

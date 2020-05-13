@@ -12,6 +12,8 @@ import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.WindowManager;
 
+import com.blankj.utilcode.util.LogUtils;
+
 import java.io.File;
 import java.lang.reflect.Method;
 
@@ -154,7 +156,7 @@ public class DeviceUtils {
             height = dm.heightPixels;
         } catch (Exception ex) {
             ex.printStackTrace();
-            LogUtils.info("getRealHeightPixels = " + ex.getMessage());
+            LogUtils.i("getRealHeightPixels = " + ex.getMessage());
         }
         return height;
     }

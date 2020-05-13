@@ -3,6 +3,11 @@ package com.avengers.ironman;
 import android.app.Application;
 import android.content.Context;
 
+import com.avengers.ironman.largeimage.LargeImageConfig;
+import com.blankj.utilcode.util.LogUtils;
+import com.blankj.utilcode.util.ProcessUtils;
+import com.blankj.utilcode.util.Utils;
+
 /**
  * 入口类
  * <p>
@@ -25,39 +30,76 @@ import android.content.Context;
 public class IronMan {
 
     private static Context context;
-    /**
-     * 文件大小阈值 kb为单位
-     */
-    private double largeImageFileSizeThreshold = 500.0;
-    /**
-     * 内存大小阈值 kb为单位
-     */
-    private double largeImageMemorySizeThreshold = 800.0;
+
+    private static volatile IronMan sIronMan;
+    private static volatile boolean isInitializing = false;
+    private static volatile boolean alreadyInit = false;
+    private LargeImageConfig largeImageConfig;
 
     private IronMan() {
-    }
-
-    public static IronMan getInstance() {
-        return SingletonHolder.sInstance;
-    }
-
-    private static class SingletonHolder {
-        private static final IronMan sInstance = new IronMan();
+        largeImageConfig = new LargeImageConfig();
     }
 
     public static void init(Application application) {
+        if (alreadyInit) {
+            return;
+        }
+        alreadyInit = true;
         context = application;
+        initAndroidUtil(application);
+        if (!ProcessUtils.isMainProcess()) {
+            return;
+        }
+        get();
+    }
+
+    public static IronMan get() {
+        if (sIronMan == null) {
+            synchronized (IronMan.class) {
+                if (sIronMan == null) {
+                    checkAndInitializeIronMan();
+                }
+            }
+        }
+        return sIronMan;
+    }
+
+    private static void checkAndInitializeIronMan() {
+        if (isInitializing) {
+            throw new IllegalArgumentException("checkAndInitializeIronMan");
+        }
+        isInitializing = true;
+        try {
+            initializeIronMan();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            isInitializing = false;
+        }
+    }
+
+    private static void initializeIronMan() {
+        sIronMan = new IronMan();
+    }
+
+    public LargeImageConfig largeImageConfig() {
+        return largeImageConfig;
+    }
+
+    private static void initAndroidUtil(Application application) {
+        Utils.init(application);
+        LogUtils.getConfig().setLogSwitch(true)
+                .setConsoleSwitch(true)
+                .setGlobalTag("IronMan")
+                .setLogHeadSwitch(true)
+                .setLog2FileSwitch(false)
+                .setBorderSwitch(true)
+                .setSingleTagSwitch(true)
+                .setStackDeep(2);
     }
 
     public static Context getContext() {
         return context;
     }
 
-    public double getLargeImageFileSizeThreshold() {
-        return largeImageFileSizeThreshold;
-    }
-
-    public double getLargeImageMemorySizeThreshold() {
-        return largeImageMemorySizeThreshold;
-    }
 }
