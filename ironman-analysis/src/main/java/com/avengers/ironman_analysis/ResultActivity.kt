@@ -1,10 +1,10 @@
 package com.avengers.ironman_analysis
 
-import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.blankj.utilcode.util.Utils
 import com.google.android.material.tabs.TabLayoutMediator
 import com.gyf.immersionbar.ktx.immersionBar
 import kotlinx.android.synthetic.main.activity_result.*
@@ -22,15 +22,17 @@ class ResultActivity : AppCompatActivity() {
             statusBarDarkFont(true)
             fitsSystemWindows(true)
         }
+        Utils.init(application)
 
         val list = mutableListOf<Fragment>()
+        list.add(AppInfoFragment.newInstance())
         list.add(LargeImageFragment.newInstance())
         viewPager.adapter = ViewPagerAdapter(this, list)
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             if (position == 0) {
-                tab.text = "大图监控"
+                tab.text = "基本信息"
             } else {
-                tab.text = "其他"
+                tab.text = "大图监控"
             }
         }.attach()
     }

@@ -147,59 +147,6 @@ public class DeviceUtils {
     }
 
     /**
-     * 分辨率
-     */
-    public static int getWidthPixels(Context context) {
-        DisplayMetrics metrics = new DisplayMetrics();
-        WindowManager windowManager =
-                (WindowManager) context.getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
-        if (windowManager != null) {
-            windowManager.getDefaultDisplay().getMetrics(metrics);
-            return metrics.widthPixels;
-        } else {
-            return 0;
-        }
-    }
-
-    /**
-     * 分辨率
-     */
-    public static int getHeightPixels(Context context) {
-        return getRealHeightPixels(context) - getStatusBarHeight(context);
-    }
-
-    /**
-     * 分辨率
-     */
-    public static int getRealHeightPixels(Context context) {
-        WindowManager windowManager =
-                (WindowManager) context.getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
-        int height = 0;
-        Display display = windowManager != null ? windowManager.getDefaultDisplay() : null;
-        DisplayMetrics dm = new DisplayMetrics();
-        Class<?> c;
-        try {
-            c = Class.forName("android.view.Display");
-            Method method = c.getMethod("getRealMetrics", DisplayMetrics.class);
-            method.invoke(display, dm);
-            height = dm.heightPixels;
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            LogUtils.i("getRealHeightPixels = " + ex.getMessage());
-        }
-        return height;
-    }
-
-    /**
-     * 状态栏高度
-     */
-    public static int getStatusBarHeight(Context context) {
-        Resources resources = context.getApplicationContext().getResources();
-        int resourceId = resources.getIdentifier("status_bar_height", "dimen", "android");
-        return resources.getDimensionPixelSize(resourceId);
-    }
-
-    /**
      * 是否Root
      */
     public static boolean isDeviceRooted() {
