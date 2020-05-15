@@ -52,9 +52,9 @@ open class EfficientAdapter<T> : RecyclerView.Adapter<RecyclerView.ViewHolder>()
         val errorMessage: String
         errorMessage = if (items is List<*>) {
             val itemString = (items as List<*>)[position].toString()
-            "No AdapterDelegate added that matches item=$itemString at position=$position in data source"
+            "No holder added that matches item=$itemString at position=$position in data source"
         } else {
-            "No AdapterDelegate added for item at position=$position. items=$items"
+            "No holder added for item at position=$position. items=$items"
         }
         throw java.lang.NullPointerException(errorMessage)
     }
@@ -67,7 +67,7 @@ open class EfficientAdapter<T> : RecyclerView.Adapter<RecyclerView.ViewHolder>()
         var viewType: Int = typeHolders.size()
         while (typeHolders.get(viewType) != null) {
             viewType++
-            require(viewType != FALLBACK_DELEGATE_VIEW_TYPE) { "Oops, we are very close to Integer.MAX_VALUE. It seems that there are no more free and unused view type integers left to add another AdapterDelegate." }
+            require(viewType != FALLBACK_DELEGATE_VIEW_TYPE) { "Oops, we are very close to Integer.MAX_VALUE. It seems that there are no more free and unused view type integers left to add another holder." }
         }
         return addTypeHolder(viewType, holder)
     }

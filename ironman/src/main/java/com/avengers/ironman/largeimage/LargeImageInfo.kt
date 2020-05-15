@@ -14,13 +14,14 @@ class LargeImageInfo {
     var viewHeight = 0
     var activity: String? = null //控件所在的activity名字
     var layoutLevel: String? = null //布局层级
-    var viewString = "" //控件信息
+    var viewId = "" //控件id
     var bitmap: Bitmap? = null
     var phoneModel: String? = null //手机型号
     var phoneSysVersion: String? = null  //手机型号
     var sdcardSpace: String? = null  //sd卡剩余空间
     var romSpace: String? = null  //系统剩余空间
     var memorySpace: String? = null //内存占用
+    var time: String? = ""
 
     override fun toString(): String {
         return "LargeImageInfo{" +
@@ -34,7 +35,7 @@ class LargeImageInfo {
                 ", viewHeight=" + viewHeight +
                 ", activity='" + activity + '\'' +
                 ", layoutLevel='" + layoutLevel + '\'' +
-                ", viewString=" + viewString +
+                ", viewString=" + viewId +
                 '}'
     }
 }

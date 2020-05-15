@@ -13,12 +13,19 @@ import java.util.*
 
 class LargeImageManager private constructor() {
     private var tempView: View? = null
+    private var tempViewId: String? = null
     private var tempLayoutLevel: String? = null
     private var tempActivity: Activity? = null
 
 
-    fun saveViewTargetInfo(view: View?, layoutLevel: String?, activity: Activity?) {
+    fun saveViewTargetInfo(
+        view: View?,
+        viewId: String?,
+        layoutLevel: String?,
+        activity: Activity?
+    ) {
         this.tempView = view
+        this.tempViewId = viewId
         this.tempLayoutLevel = layoutLevel
         this.tempActivity = activity
     }
@@ -67,8 +74,9 @@ class LargeImageManager private constructor() {
         val fileSizeThreshold = IronMan.get().largeImageConfig().fileSizeThreshold
         val memorySizeThreshold = IronMan.get().largeImageConfig().memorySizeThreshold
         val largeImageInfo: LargeImageInfo?
-        if (lagerImageCache.containsKey(imageUrl)) {
-            largeImageInfo = lagerImageCache[imageUrl]
+        val id = MD5.hexdigest(imageUrl)
+        if (lagerImageCache.containsKey(id)) {
+            largeImageInfo = lagerImageCache[id]
             if (largeImageInfo != null && (memorySize > memorySizeThreshold || largeImageInfo.fileSize > fileSizeThreshold)) {
                 createLargeImageInfo(
                     largeImageInfo,
@@ -80,7 +88,7 @@ class LargeImageManager private constructor() {
                     sourceBitmap
                 )
             } else {
-                lagerImageCache.remove(imageUrl)
+                lagerImageCache.remove(id)
             }
         } else {
             if (memorySize > memorySizeThreshold) {
@@ -116,7 +124,7 @@ class LargeImageManager private constructor() {
             largeImageInfo?.height = height
             largeImageInfo?.viewWidth = tempView?.measuredWidth ?: 0
             largeImageInfo?.viewHeight = tempView?.measuredHeight ?: 0
-            largeImageInfo?.viewString = tempView.toString()
+            largeImageInfo?.viewId = tempViewId ?: "can not get view id"
             largeImageInfo?.bitmap = sourceBitmap
             largeImageInfo?.layoutLevel = tempLayoutLevel ?: "can not get layoutLevel"
             largeImageInfo?.activity =
@@ -126,8 +134,18 @@ class LargeImageManager private constructor() {
             largeImageInfo?.sdcardSpace = DeviceUtils.getSDCardSpace(IronMan.getContext())
             largeImageInfo?.romSpace = DeviceUtils.getRomSpace(IronMan.getContext())
             largeImageInfo?.memorySpace = DeviceUtils.getMemorySpace(IronMan.getContext())
-            lagerImageCache[imageUrl] = largeImageInfo!!
+            largeImageInfo?.time = getCurrTime()
+            lagerImageCache[MD5.hexdigest(imageUrl)] = largeImageInfo!!
         }
+    }
+
+    private fun getCurrTime(): String {
+        val c = Calendar.getInstance()
+        return c[Calendar.YEAR].toString() + "/" +
+                (c[Calendar.MONTH] + 1) + "/" +
+                c[Calendar.DAY_OF_MONTH] + " " +
+                c[Calendar.HOUR_OF_DAY] + ":" +
+                c[Calendar.MINUTE] + "分"
     }
 
     companion object {

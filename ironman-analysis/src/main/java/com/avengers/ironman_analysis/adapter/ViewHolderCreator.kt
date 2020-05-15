@@ -24,34 +24,34 @@ abstract class ViewHolderCreator<T> {
 
     private var itemView: View? = null
 
-     fun registerItemView(itemView: View?) {
+    fun registerItemView(itemView: View?) {
         this.itemView = itemView
     }
 
-     fun < V : View> findViewById(viewId: Int): V {
+    fun <V : View> findViewById(viewId: Int): V {
         checkItemView()
         return itemView!!.findViewById(viewId)
     }
 
-     fun setText(viewId: Int, text: String?): ViewHolderCreator<T> {
+    fun setText(viewId: Int, text: String?): ViewHolderCreator<T> {
         val textView: TextView = findViewById(viewId)
         textView.text = text
         return this
     }
 
-     fun setImageResource(viewId: Int, resId: Int): ViewHolderCreator<T> {
+    fun setImageResource(viewId: Int, resId: Int): ViewHolderCreator<T> {
         val imageView: ImageView = findViewById(viewId)
         imageView.setImageResource(resId)
         return this
     }
 
-     fun setImageBitmap(viewId: Int, bm: Bitmap?): ViewHolderCreator<T> {
+    fun setImageBitmap(viewId: Int, bm: Bitmap?): ViewHolderCreator<T> {
         val imageView: ImageView = findViewById(viewId)
         imageView.setImageBitmap(bm)
         return this
     }
 
-     fun setImageDrawable(
+    fun setImageDrawable(
         viewId: Int,
         drawable: Drawable?
     ): ViewHolderCreator<T> {
@@ -60,7 +60,7 @@ abstract class ViewHolderCreator<T> {
         return this
     }
 
-     fun setBackground(
+    fun setBackground(
         viewId: Int,
         drawable: Drawable?
     ): ViewHolderCreator<T> {
@@ -73,70 +73,75 @@ abstract class ViewHolderCreator<T> {
         return this
     }
 
-     fun setBackgroundResource(viewId: Int, resid: Int): ViewHolderCreator<T> {
+    fun setBackgroundResource(viewId: Int, resid: Int): ViewHolderCreator<T> {
         val imageView: ImageView = findViewById(viewId)
         imageView.setBackgroundResource(resid)
         return this
     }
 
-     fun visible(id: Int): ViewHolderCreator<T> {
+    fun visible(id: Int): ViewHolderCreator<T> {
         findViewById<View>(id).visibility = View.VISIBLE
         return this
     }
 
-     fun invisible(id: Int): ViewHolderCreator<T> {
+    fun invisible(id: Int): ViewHolderCreator<T> {
         findViewById<View>(id).visibility = View.INVISIBLE
         return this
     }
 
-     fun gone(id: Int): ViewHolderCreator<T> {
+    fun gone(id: Int): ViewHolderCreator<T> {
         findViewById<View>(id).visibility = View.GONE
         return this
     }
 
-     fun visibility(id: Int, visibility: Int): ViewHolderCreator<T> {
+    fun visibility(id: Int, visibility: Int): ViewHolderCreator<T> {
         findViewById<View>(id).visibility = visibility
         return this
     }
 
-     fun setTextColor(id: Int, color: Int): ViewHolderCreator<T> {
+    fun setTextColor(id: Int, color: Int): ViewHolderCreator<T> {
         val view: TextView = findViewById(id)
         view.setTextColor(color)
         return this
     }
 
-     fun setTextSize(id: Int, sp: Int): ViewHolderCreator<T> {
+    fun setTextSize(id: Int, sp: Int): ViewHolderCreator<T> {
         val view: TextView = findViewById(id)
         view.setTextSize(TypedValue.COMPLEX_UNIT_SP, sp.toFloat())
         return this
     }
 
-     fun clicked(id: Int, listener: View.OnClickListener?): ViewHolderCreator<T> {
+    fun clicked(id: Int, listener: View.OnClickListener?): ViewHolderCreator<T> {
         findViewById<View>(id).setOnClickListener(listener)
         return this
     }
 
-     fun longClicked(id: Int, listener: OnLongClickListener?): ViewHolderCreator<T> {
+    fun itemClicked(listener: View.OnClickListener?): ViewHolderCreator<T> {
+        itemView?.setOnClickListener(listener)
+        return this
+    }
+
+    fun longClicked(id: Int, listener: OnLongClickListener?): ViewHolderCreator<T> {
         findViewById<View>(id).setOnLongClickListener(listener)
         return this
     }
 
-     fun enable(id: Int, enable: Boolean): ViewHolderCreator<T> {
+    fun enable(id: Int, enable: Boolean): ViewHolderCreator<T> {
         findViewById<View>(id).setEnabled(enable)
         return this
     }
 
-     fun enable(id: Int): ViewHolderCreator<T> {
+    fun enable(id: Int): ViewHolderCreator<T> {
         findViewById<View>(id).isEnabled = true
         return this
     }
 
-     fun disable(id: Int): ViewHolderCreator<T> {
+    fun disable(id: Int): ViewHolderCreator<T> {
         findViewById<View>(id).isEnabled = false
         return this
     }
 
-     fun addView(id: Int, vararg views: View?): ViewHolderCreator<T> {
+    fun addView(id: Int, vararg views: View?): ViewHolderCreator<T> {
         val viewGroup: ViewGroup = findViewById(id)
         for (view in views) {
             viewGroup.addView(view)
@@ -144,7 +149,7 @@ abstract class ViewHolderCreator<T> {
         return this
     }
 
-     fun addView(
+    fun addView(
         id: Int,
         view: View?,
         params: ViewGroup.LayoutParams?
@@ -154,13 +159,13 @@ abstract class ViewHolderCreator<T> {
         return this
     }
 
-     fun removeAllViews(id: Int): ViewHolderCreator<T> {
+    fun removeAllViews(id: Int): ViewHolderCreator<T> {
         val viewGroup: ViewGroup = findViewById(id)
         viewGroup.removeAllViews()
         return this
     }
 
-     fun removeView(id: Int, view: View?): ViewHolderCreator<T> {
+    fun removeView(id: Int, view: View?): ViewHolderCreator<T> {
         val viewGroup: ViewGroup = findViewById(id)
         viewGroup.removeView(view)
         return this

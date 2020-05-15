@@ -46,11 +46,12 @@ public class GlideHook {
     public static void hookViewTarget(View view) {
         if (view != null) {
             String layoutLevel = ViewUtils.getLayoutLevel(view);
+            String viewId = ViewUtils.getIdText(view);
             Activity activity = null;
             if (view.getContext() != null && view.getContext() instanceof Activity) {
                 activity = (Activity) view.getContext();
             }
-            LargeImageManager.getInstance().saveViewTargetInfo(view, layoutLevel, activity);
+            LargeImageManager.getInstance().saveViewTargetInfo(view, viewId, layoutLevel, activity);
         }
     }
 
