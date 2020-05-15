@@ -17,7 +17,7 @@ class LargeImageFragment : BaseFragment() {
 
     override fun init() {
         LargeImageManager.lagerImageCache.forEach {
-            Log.i("XIAN", "" + it.value.toString())
+           // Log.i("XIAN", "" + it.value.toString())
         }
 
     }
