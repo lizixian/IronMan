@@ -48,6 +48,7 @@ public class GlideHook {
             String layoutLevel = ViewUtils.getLayoutLevel(view);
             String viewId = ViewUtils.getIdText(view);
             Activity activity = null;
+            String packageName = "";
             if (view.getContext() != null && view.getContext() instanceof Activity) {
                 activity = (Activity) view.getContext();
             }

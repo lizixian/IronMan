@@ -17,12 +17,11 @@ class LargeImageManager private constructor() {
     private var tempLayoutLevel: String? = null
     private var tempActivity: Activity? = null
 
-
     fun saveViewTargetInfo(
-        view: View?,
-        viewId: String?,
-        layoutLevel: String?,
-        activity: Activity?
+            view: View?,
+            viewId: String?,
+            layoutLevel: String?,
+            activity: Activity?
     ) {
         this.tempView = view
         this.tempViewId = viewId
@@ -31,40 +30,40 @@ class LargeImageManager private constructor() {
     }
 
     fun transform(
-        imageUrl: String?,
-        bitmapDrawable: BitmapDrawable?,
-        framework: String?
+            imageUrl: String?,
+            bitmapDrawable: BitmapDrawable?,
+            framework: String?
     ): Bitmap? {
         val sourceBitmap = ConvertUtils.drawable2Bitmap(bitmapDrawable)
         return transform(imageUrl, sourceBitmap, framework)
     }
 
     fun transform(
-        imageUrl: String?,
-        sourceBitmap: Bitmap?,
-        framework: String?
+            imageUrl: String?,
+            sourceBitmap: Bitmap?,
+            framework: String?
     ): Bitmap? {
         if (null == sourceBitmap) {
             return null
         }
         saveImageInfo(
-            imageUrl,
-            sourceBitmap.byteCount,
-            sourceBitmap.width,
-            sourceBitmap.height,
-            framework,
-            sourceBitmap
+                imageUrl,
+                sourceBitmap.byteCount,
+                sourceBitmap.width,
+                sourceBitmap.height,
+                framework,
+                sourceBitmap
         )
         return sourceBitmap
     }
 
     private fun saveImageInfo(
-        imageUrl: String?,
-        byteCount: Int,
-        width: Int,
-        height: Int,
-        framework: String?,
-        sourceBitmap: Bitmap
+            imageUrl: String?,
+            byteCount: Int,
+            width: Int,
+            height: Int,
+            framework: String?,
+            sourceBitmap: Bitmap
     ) {
         if (byteCount <= 0) {
             return
@@ -79,13 +78,13 @@ class LargeImageManager private constructor() {
             largeImageInfo = lagerImageCache[id]
             if (largeImageInfo != null && (memorySize > memorySizeThreshold || largeImageInfo.fileSize > fileSizeThreshold)) {
                 createLargeImageInfo(
-                    largeImageInfo,
-                    imageUrl,
-                    framework,
-                    memorySize,
-                    width,
-                    height,
-                    sourceBitmap
+                        largeImageInfo,
+                        imageUrl,
+                        framework,
+                        memorySize,
+                        width,
+                        height,
+                        sourceBitmap
                 )
             } else {
                 lagerImageCache.remove(id)
@@ -94,26 +93,26 @@ class LargeImageManager private constructor() {
             if (memorySize > memorySizeThreshold) {
                 largeImageInfo = LargeImageInfo()
                 createLargeImageInfo(
-                    largeImageInfo,
-                    imageUrl,
-                    framework,
-                    memorySize,
-                    width,
-                    height,
-                    sourceBitmap
+                        largeImageInfo,
+                        imageUrl,
+                        framework,
+                        memorySize,
+                        width,
+                        height,
+                        sourceBitmap
                 )
             }
         }
     }
 
     private fun createLargeImageInfo(
-        largeImageInfo: LargeImageInfo?,
-        imageUrl: String?,
-        framework: String?,
-        memorySize: Double,
-        width: Int,
-        height: Int,
-        sourceBitmap: Bitmap
+            largeImageInfo: LargeImageInfo?,
+            imageUrl: String?,
+            framework: String?,
+            memorySize: Double,
+            width: Int,
+            height: Int,
+            sourceBitmap: Bitmap
     ) {
         MainLooper.runOnUiThread {
             largeImageInfo?.id = MD5.hexdigest(imageUrl)
@@ -128,7 +127,7 @@ class LargeImageManager private constructor() {
             largeImageInfo?.bitmap = sourceBitmap
             largeImageInfo?.layoutLevel = tempLayoutLevel ?: "can not get layoutLevel"
             largeImageInfo?.activity =
-                tempActivity?.javaClass?.simpleName ?: "can not get activity name"
+                    tempActivity?.packageName + "/" + tempActivity?.javaClass?.simpleName
             largeImageInfo?.phoneModel = DeviceUtils.getPhoneModel()
             largeImageInfo?.phoneSysVersion = DeviceUtils.getPhoneSysVersion()
             largeImageInfo?.sdcardSpace = DeviceUtils.getSDCardSpace(IronMan.getContext())
